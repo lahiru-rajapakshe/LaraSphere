@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Facebook Wall Clone</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #e9ebee;
+        }
+
+        /* Navbar */
+        .navbar {
+            background-color: #4267B2;
+            color: white;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .navbar .logo {
+            display: flex;
+            align-items: center;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .navbar .logo img {
+            margin-right: 10px;
+            border-radius: 50%;
+        }
+
+        .navbar input[type="text"] {
+            padding: 5px;
+            width: 300px;
+            border: none;
+            border-radius: 20px;
+            outline: none;
+            padding-left: 15px;
+        }
+
+        .navbar .menu {
+            display: flex;
+            gap: 15px;
+        }
+
+        .navbar .menu a {
+            color: white;
+            text-decoration: none;
+            font-size: 16px;
+        }
+
+        .navbar .menu a:hover {
+            text-decoration: underline;
+        }
+
+        /* Main container */
+        .container {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .left-sidebar, .right-sidebar {
+            width: 18%;
+            padding: 10px;
+            position: sticky;
+            top: 0;
+            height: 100vh; /* Ensures the sidebar takes the full viewport height */
+            overflow: hidden; /* Prevents scrolling within the sidebars */
+        }
+
+        .left-sidebar ul, .right-sidebar ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .left-sidebar li, .right-sidebar li {
+            background: white;
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+        }
+
+        .left-sidebar li:hover, .right-sidebar li:hover {
+            background: #f0f2f5;
+        }
+
+        .main-content {
+            width: 30%;
+            padding: 10px;
+        }
+
+        .post-box {
+            background: white;
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .post-box textarea {
+            width: 100%;
+            border: none;
+            resize: none;
+            padding: 10px;
+            border-radius: 5px;
+            box-sizing: border-box;
+            font-size: 14px;
+        }
+
+        .post-box textarea:focus {
+            outline: 2px solid #4267B2;
+        }
+
+        .post-box button {
+            background-color: #4267B2;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .post-box button:hover {
+            background-color: #365899;
+        }
+
+        .post {
+            background: white;
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .post .content {
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+
+        .post .user {
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+        }
+
+        .post .user img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+
+        .post .content img {
+            max-width: 100%;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+
+        .post .actions {
+            margin-top: 10px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .post .actions button {
+            background: none;
+            border: none;
+            color: #4267B2;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .post .actions button:hover {
+            text-decoration: underline;
+        }
+
+        /* Post Date */
+        .post .date {
+            font-size: 12px;
+            color: #888;
+            margin-top: 10px;
+        }
+
+        /* Hide emojis by default */
+        .emoji {
+            display: none;
+            position: absolute;
+            background-color: #ffffff;
+            padding: 5px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            z-index: 10;
+            margin-top: 5px;
+        }
+
+        .emoji span {
+            font-size: 16px;
+            cursor: pointer;
+            padding: 5px;
+        }
+
+        /* Position the emojis next to the buttons */
+        .like-btn, .comment-btn, .share-btn {
+            position: relative;
+        }
+
+        .like-btn:hover + .like-emoji,
+        .comment-btn:hover + .comment-emoji,
+        .share-btn:hover + .share-emoji {
+            display: block;
+        }
+
+        /* Optional: Add a subtle animation for the emoji appearance */
+        .emoji {
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .like-btn:hover + .like-emoji,
+        .comment-btn:hover + .comment-emoji,
+        .share-btn:hover + .share-emoji {
+            display: block;
+            opacity: 1;
+        }
+
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <div class="navbar">
+        <div class="logo">
+            <img src="https://via.placeholder.com/40" alt="Logo"> Lara's Wall
+        </div>
+        <input type="text" placeholder="Search">
+        <div class="menu">
+            <a href="#">Home</a>
+            <a href="#">Profile</a>
+            <a href="#">Messages</a>
+        </div>
+    </div>
+
+    <!-- Main container -->
+    <div class="container">
+        <!-- Left Sidebar -->
+        <div class="left-sidebar">
+            <ul>
+                <li>Friends</li>
+                <li>Groups</li>
+                <li>Marketplace</li>
+                <li>Memories</li>
+            </ul>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Post Box -->
+            <div class="post-box">
+                <textarea placeholder="What's on your mind?" rows="3"></textarea>
+                <button>Post</button>
+            </div>
+
+            <!-- Posts -->
+            <div class="post">
+                
+                <div class="user">
+                    <img src="https://via.placeholder.com/40" alt="User Photo"> John Doe
+                </div>
+                <div class="content">
+                    Had a great day today! 🌟
+                </div>
+                <div class="date">
+                    Posted on: December 15, 2024
+                </div>
+                <div class="content">
+                    <img src="https://via.placeholder.com/600x400" alt="Post Image">
+                </div>
+           
+                <div class="actions">
+                    <button class="like-btn">Like</button>
+                    <div class="emoji like-emoji">
+                        <span>👍</span>
+                        <span>😂</span>
+                        <span>❤️</span>
+                    </div>
+                
+                    <button class="comment-btn">Comment</button>
+                    <div class="emoji comment-emoji">
+                        <span>💬</span>
+                        <span>😊</span>
+                    </div>
+                
+                    <button class="share-btn">Share</button>
+                    <div class="emoji share-emoji">
+                        <span>🔗</span>
+                        <span>📤</span>
+                    </div>
+                </div>
+                
+            </div>
+
+            <div class="post">
+                <div class="user">
+                    <img src="output3.jpg" alt="User Photo"> Jane Smith
+                </div>
+                <div class="content">
+                    Had a great day today! 🌟
+                </div>
+                <div class="date">
+                    Posted on: December 15, 2024
+                </div>
+                <div class="content">
+                    <img src="output1.jpg" alt="Adventure Photo">
+                </div>
+            
+                <div class="actions">
+                    <button class="like-btn">Like</button>
+                    <div class="emoji like-emoji">
+                        <span>👍</span>
+                        <span>😂</span>
+                        <span>❤️</span>
+                    </div>
+                
+                    <button class="comment-btn">Comment</button>
+                    <div class="emoji comment-emoji">
+                        <span>💬</span>
+                        <span>😊</span>
+                    </div>
+                
+                    <button class="share-btn">Share</button>
+                    <div class="emoji share-emoji">
+                        <span>🔗</span>
+                        <span>📤</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Sidebar -->
+        <div class="right-sidebar">
+            <ul>
+                <li>Notifications</li>
+                <li>Settings</li>
+                <li>Help</li>
+            </ul>
+        </div>
+    </div>
+
+</body>
+</html>
