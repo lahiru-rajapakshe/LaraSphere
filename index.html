@@ -235,6 +235,72 @@
             opacity: 1;
         }
 
+
+           /* Add responsiveness for main container */
+    @media (max-width: 1024px) {
+        .container {
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        .left-sidebar, .right-sidebar {
+            width: 100%;
+            padding: 10px 0;
+        }
+
+        .main-content {
+            width: 100%;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .navbar {
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        .navbar input[type="text"] {
+            width: 100%;
+            margin: 10px 0;
+        }
+
+        .navbar .menu {
+            flex-direction: row;
+            justify-content: center;
+        }
+
+        .left-sidebar, .right-sidebar {
+            display: none; /* Hide sidebars for smaller screens */
+        }
+
+        .main-content {
+            width: 100%;
+            padding: 0 10px;
+        }
+
+        .post-box textarea {
+            font-size: 14px;
+        }
+
+        .post .actions button {
+            font-size: 12px;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .navbar input[type="text"] {
+            width: 90%;
+        }
+
+        .post-box button {
+            width: 100%;
+        }
+
+        .post .content img {
+            width: 100%;
+            height: auto;
+        }
+    }
     </style>
 </head>
 <body>
